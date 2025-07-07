@@ -59,6 +59,7 @@
     "Root": "/wwwroot/"
   }
 }
+```
 ## Controllers and Routes
 
 Controllers are defined as JSON files ending with `Controller.json`. Each contains a list of actions/routes with:
