@@ -1,170 +1,194 @@
-# Next.Core.WebServer
+# Next Core Web Server — User Guide for Developers
 
-## Overview
+## Introduction
 
-`Next.Core.WebServer` is a lightweight HTTP server implementation based on .NET's `HttpListener`. It serves static files and dynamic content using configurable routes loaded from JSON controller files. The server supports HTML page layouts, query parameter binding, and MIME type resolution.
+**Next Core Web Server** is a lightweight, easy-to-use HTTP server application designed for developers who want to quickly launch a web server from the command line (console) without deep programming knowledge.
 
----
-
-## Features
-
-- Configurable server URL (domain and port) via `AppSettings`.
-- Loading routes and actions dynamically from JSON controller files.
-- Serving static files from a specified root folder.
-- Supports simple view templates with optional layouts.
-- Query parameter binding for dynamic content rendering.
-- MIME type detection for common web file extensions.
-- Graceful start and stop with cancellation token support.
-- Console logging for key server events (info, success, errors).
-- Basic 404 and 500 error handling with custom error pages.
+This guide helps you understand how to **configure, start, and manage the web server application** to host your web content and dynamic pages using simple configuration files and folder structures.
 
 ---
 
-## Project Structure
+## What This Is For
 
-- `WebServerProvider` class: Core HTTP server logic, route management, request handling.
-- `Program` class: Console app launcher, server lifecycle management, and administrative setup.
-- `AppSettings` class (not shown): Configuration model with properties like `Domain`, `Port`, folder paths, layout, and special folders.
-
----
-
-## Usage
-
-### Running the Server
-
-- Make sure the program runs with Administrator privileges (required for host and URL ACL changes).
-- Place your controller JSON files in the configured controllers folder (e.g. `I:\Localhost\Controllers`).
-- Configure your app settings JSON (e.g. `I:\Localhost\AppSettings.json`) with domain, port, and folder paths.
-- Run the console application. It will:
-  - Set URL ACL and hosts file entries.
-  - Start the HTTP listener.
-  - Accept incoming HTTP requests.
-  - Serve static files or render dynamic views with optional layouts.
-  - Handle user input to restart or stop the server.
+- Run a **local or public HTTP server** quickly via a console app.
+- Serve **static files** (HTML, CSS, JS, images).
+- Host **dynamic pages** by defining routes and views via JSON files.
+- Customize MIME types and page layouts easily.
+- No need to write or change C# source code.
+- Manage server lifecycle (start/stop) via console commands.
 
 ---
 
-## Configuration Example (`AppSettings.json`)
+## Quick Start
 
-```json
-{
-  "Domain": "localhost",
-  "Port": 8080,
-  "Tilda": "I:\\Localhost",
-  "Layout": "I:\\Localhost\\Layouts\\MainLayout.html",
-  "Folders": {
-    "Shared": "I:\\Localhost\\Shared"
-  },
-  "SpecialFolders": {
-    "Root": "/wwwroot/"
-  }
-}
+### 1. Prepare Your Server Folder Structure
+
+Organize your project folders as follows (you can customize paths in settings later):
+
+- `/Controllers`  
+  JSON files defining routes and pages  
+
+- `/Shared`  
+  Shared resources like CSS, JS, images  
+
+- `/Static`  
+  Static files to serve directly (optional)  
+
+- `/Layouts`  
+  HTML layout templates for your pages  
+
+- `/mime-types.json`  
+  JSON file listing supported MIME types  
+
+
+---
+
+### 2. Configure Your Server
+
+Create or edit an `appsettings.json` file or equivalent configuration with these key settings:
+
+| Setting       | Description                                          | Example                      |
+|---------------|------------------------------------------------------|------------------------------|
+| Domain        | Hostname or IP address where the server listens      | "localhost" or "0.0.0.0"     |
+| Port          | TCP port number for incoming HTTP requests           | 8080                         |
+| Folders       | Paths to your Controllers, Shared resources, Root folder | Controllers: `./Controllers`<br>Shared: `./Shared`<br>Root: `/static` |
+| MimeTypePath  | File path to your MIME types JSON file                | `./mime-types.json`          |
+| Layout        | Path to your main HTML layout template                | `./Layouts/main.html`        |
+
+---
+
+### 3. Run the Server
+
+Run the console application executable:
+
+```bash
+NextCoreWebServer.exe
 ```
-## Controllers and Routes
 
-Controllers are defined as JSON files ending with `Controller.json`. Each contains a list of actions/routes with:
+## Running the Server
 
-- **Paths:** List of URL paths matching this action.
-- **View:** Path to the HTML view template.
-- **Icon:** Optional favicon path.
-
-### Example route loading:
-
-- Loads all `*Controller.json` files from the controllers folder.
-- Aggregates all actions for routing.
-- Matches incoming requests to routes by exact path.
+- The server will read your configuration.
+- Start listening on the specified domain and port.
+- Output logs appear in the console window showing server status.
 
 ---
 
-## Request Handling
+## 4. Access Your Web Server
 
-- Requests starting with special folders like `/wwwroot/` serve static files from the configured root folder.
-- Other requests are matched against registered routes.
-- If matched, the server reads the view file, applies the layout (if any), and replaces placeholders with query parameters.
-- Responds with the rendered HTML.
-- If not matched, responds with a 404 page.
-- On exceptions, responds with a 500 Internal Server Error.
+- Open a browser.
+- Navigate to `http://{Domain}:{Port}` (e.g., `http://localhost:8080`).
+- Static files and dynamic routes defined in your controllers will be served.
 
 ---
 
-## Layout and Template Processing
+## 5. Stop the Server
 
-- Views can specify layout with `{{Layout="path"}}`.
-- If `{{Layout="none"}}` is present, no layout is applied.
-- Layout files have a `{{Body}}` placeholder replaced by the view content.
-- Query parameters replace placeholders like `{{Model.key}}` inside the final page.
+- In the console window, press `Ctrl+C` or close the window.
+- The server will gracefully shut down and release the port.
 
 ---
 
-## MIME Types
+## Configuration Details
 
-Common MIME types supported include:
+### Controllers (Routing)
 
-| Extension     | MIME Type               |
-|---------------|------------------------|
-| .png          | image/png              |
-| .jpg / .jpeg  | image/jpeg             |
-| .gif          | image/gif              |
-| .ico          | image/x-icon           |
-| .css          | text/css               |
-| .js           | application/javascript |
-| .html         | text/html              |
-| .json         | application/json       |
-| .svg          | image/svg+xml          |
-| .woff / .woff2| font/woff, font/woff2  |
-| .ttf          | font/ttf               |
+- Routes and pages are defined in JSON files inside the **Controllers** folder.
+- Each route maps URL paths (e.g., `/home`) to an HTML or Blazora view.
+- Metadata such as page title and description can be set per route.
 
----
-
-## Console Commands
-
-- **Backspace:** Stop the server and exit.
-- **Enter:** Clear the console screen.
-- **Spacebar:** Restart the server.
-
----
-
-## Prerequisites
-
-- .NET runtime compatible with HttpListener API.
-- Administrator privileges to configure URL ACLs and hosts entries.
-
----
-
-## Logging
-
-The server logs key events via `CoreConsole` methods:
-
-- `Information()`
-- `Success()`
-- `Warning()`
-- `SimpleError()`
-- `Error()`
-
-These log to the console with different severity levels.
-
----
-
-## Example of a Controller JSON (`ExampleController.json`)
+Example controller JSON:
 
 ```json
 {
   "Actions": [
     {
-      "Paths": ["/home", "/index"],
-      "View": "I:\\Localhost\\Views\\Home.html",
-      "Icon": "./favicon.ico"
-    },
-    {
-      "Paths": ["/about"],
-      "View": "I:\\Localhost\\Views\\About.html"
+      "Paths": ["/home", "/welcome"],
+      "Title": "Welcome Page",
+      "View": "Views/Welcome.html"
     }
   ]
 }
 ```
-## Extending and Customizing
+## Static Files
 
-- Add more routes by creating additional controller JSON files.
-- Customize the layout and views to fit your website's design.
-- Extend MIME types by updating the `MimeTypes` dictionary in the server code.
-- Implement additional logging or error handling inside the `HandleRequestAsync` method.
+- Files placed under your configured Root folder (e.g., `/static`) are served directly.
+- MIME types are automatically applied based on the `mime-types.json` file.
+
+---
+
+## MIME Types
+
+- This JSON file defines mappings from file extensions to MIME types.
+- You can extend it with additional types if needed.
+
+Example snippet:
+
+```json
+{
+  ".html": "text/html",
+  ".css": "text/css",
+  ".js": "application/javascript",
+  ".png": "image/png"
+}
+```
+
+## Static Files
+
+Files placed under your configured Root folder (e.g., `/static`) are served directly.
+
+MIME types are automatically applied based on the `mime-types.json` file.
+
+---
+
+## MIME Types
+
+This JSON file defines mappings from file extensions to MIME types.
+
+You can extend it with additional types if needed.
+
+Example snippet:
+
+```json
+{
+  ".html": "text/html",
+  ".css": "text/css",
+  ".js": "application/javascript",
+  ".png": "image/png"
+}
+```
+## Layout Templates
+
+Your HTML pages can be wrapped with a common layout template.
+
+The layout file can include placeholders for dynamic content injection.
+
+---
+
+## Logging and Console Output
+
+Success, information, warnings, and error messages will display in the console.
+
+Use these logs to monitor server activity and troubleshoot.
+
+---
+
+## Advanced Tips
+
+- To change server settings, modify your configuration files and restart the server.
+- Add new routes by creating or editing controller JSON files.
+- Place shared assets like CSS and images in the **Shared** folder.
+- Keep your static assets organized under the static root for direct serving.
+
+---
+
+## Summary
+
+**Next Core Web Server** enables developers to:
+
+- Run a fully functional HTTP server from a simple console app.
+- Configure routes and pages through JSON files — no coding required.
+- Serve both static files and dynamic views easily.
+- Manage the server with minimal setup and commands.
+
+
+
