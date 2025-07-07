@@ -1,5 +1,5 @@
 # Next Core Web Server — User Guide for Developers
-
+![Github license](https://img.shields.io/github/license/bardia-amjadi/Next.Core.WebServer)
 ## Introduction
 
 **Next Core Web Server** is a lightweight, easy-to-use HTTP server application designed for developers who want to quickly launch a web server from the command line (console) without deep programming knowledge.
