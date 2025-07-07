@@ -161,6 +161,7 @@ These log to the console with different severity levels.
     }
   ]
 }
+```
 ## Extending and Customizing
 
 - Add more routes by creating additional controller JSON files.
