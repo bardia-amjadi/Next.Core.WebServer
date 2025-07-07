@@ -94,28 +94,6 @@ Example controller JSON:
   ]
 }
 ```
-## Static Files
-
-- Files placed under your configured Root folder (e.g., `/static`) are served directly.
-- MIME types are automatically applied based on the `mime-types.json` file.
-
----
-
-## MIME Types
-
-- This JSON file defines mappings from file extensions to MIME types.
-- You can extend it with additional types if needed.
-
-Example snippet:
-
-```json
-{
-  ".html": "text/html",
-  ".css": "text/css",
-  ".js": "application/javascript",
-  ".png": "image/png"
-}
-```
 
 ## Static Files
 
