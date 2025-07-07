@@ -23,22 +23,7 @@ This guide helps you understand how to **configure, start, and manage the web se
 
 ### 1. Prepare Your Server Folder Structure
 
-Organize your project folders as follows (you can customize paths in settings later):
-
-- `/Controllers`  
-  JSON files defining routes and pages  
-
-- `/Shared`  
-  Shared resources like CSS, JS, images  
-
-- `/Static`  
-  Static files to serve directly (optional)  
-
-- `/Layouts`  
-  HTML layout templates for your pages  
-
-- `/mime-types.json`  
-  JSON file listing supported MIME types  
+You can download the each version from Release section
 
 
 ---
@@ -52,8 +37,8 @@ Create or edit an `appsettings.json` file or equivalent configuration with these
 | Domain        | Hostname or IP address where the server listens      | "localhost" or "0.0.0.0"     |
 | Port          | TCP port number for incoming HTTP requests           | 8080                         |
 | Folders       | Paths to your Controllers, Shared resources, Root folder | Controllers: `./Controllers`<br>Shared: `./Shared`<br>Root: `/static` |
-| MimeTypePath  | File path to your MIME types JSON file                | `./mime-types.json`          |
-| Layout        | Path to your main HTML layout template                | `./Layouts/main.html`        |
+| MimeTypePath  | File path to your MIME types JSON file                | `./Configurations/MimeTypes.json`          |
+| Layout        | Path to your main HTML layout template                | `./Views/Shared/Layout.html`        |
 
 ---
 
